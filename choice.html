@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+	    <meta charset="utf-8">
+	    <title>STRESS Bookstore - Home</title>
+	    <link rel="shortcut icon" href="./img/favicon.ico">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+		      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+
+		<!-- Font Awesome CSS -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+		      integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous" />
+		
+		<!-- Local CSS -->
+		<link rel="stylesheet" href="./css/styles.css" />	  
+		
+		<!-- 1. Add latest jQuery and fancybox files -->
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+		<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Fauna+One&display=swap" rel="stylesheet" />
+
+  	</head>
+<!-- =================== B O D Y ========================================= -->
+  	<body>
+  		 <!-- <h1>hola STRESS - Bookstore</h1>  -->
+			    	
+	    	<div id='app'>
+				<!-- aqui montaremos la libreria usando react y flip -->
+			</div>
+
+    	    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+		    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+		    <script type='text/babel'>
+
+
+				class App extends React.Component {
+					constructor(props) {
+						super(props);
+						this.state = {
+							// name: 'Carol',
+							books: [],
+							txtSearch: ""
+						}
+					}
+
+					componentDidMount() {
+						fetch("https://api.myjson.com/bins/1h3vb3")
+							.then(res => res.json())
+							.then(data =>
+							this.setState({
+							books: data.books
+							})
+					)
+					.catch(error => console.log(error));
+					}    		
+
+					FunBuscador = (e) => {
+						console.log(e.target.value);
+						this.setState({
+							txtSearch: e.target.value,
+						})
+					};
+
+					render() {
+						return (
+							<div>
+							<header>
+		    		    		<nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+			    					<div className="container">
+			        					<a className="navbar-brand" href="./index.html">
+											<img id="logo" src="./img/bkslogo.bmp" alt="BKS logo" /> 
+										</a>
+			        					<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			          						<span className="navbar-toggler-icon"></span>
+			        					</button>
+
+										<div className="collapse navbar-collapse" id="navbarSupportedContent">
+											<ul className="navbar-nav mr-auto">
+												<li className="nav-item active">
+													<a className="nav-link" href="./index.html"><i className="fas fa-home"></i> Home </a>
+												</li>										
+												<li className="nav-item active">
+												<a className="nav-link" href="./choice.html"><i className="fas fa-tasks"></i>Choice your book</a>
+												</li>
+												<li className="nav-item active">
+													<a className="nav-link" href="./favorites.html"><i className="fas fa-star"></i>Favorites</a>
+												</li>
+											</ul>
+											<ul className="navbar-nav">
+												<li className="nav-item" id="search">
+													<label htmlFor="inpSearch">search:</label>
+													<input type="text" id="inpSearch" maxLength="20" onChange={this.FunBuscador}  placeholder="Search..." />            
+												</li>
+											</ul>
+										</div>
+									</div>
+								</nav>	            
+							</header>
+
+	    					<main className="global">
+								<div>
+									<p>BKS bookstore</p>
+									<div className="row shaded-box">
+
+										{this.state.books.filter(
+											
+				book =>	((book.titulo.toLowerCase().includes(this.state.txtSearch.toLowerCase())) || (this.state.txtSearch === ""))
+
+											).map((book, i) => {
+										// filtering  ========================================================
+
+										return (
+											<div key={i} className="flip-card d-flex">
+												<div className="flip-card-inner">
+													<div className="flip-card-front">
+														<img src={book.portada} alt="" />
+													</div>											
+													<div className="flip-card-back box-shadow">
+														<div className="title">
+															<h5>{book.titulo}</h5>
+														</div>
+														<div className="description">
+															<p>{book.descripcion}</p>
+														</div>
+														<div className="btn-warning">
+															<button className="miBoton" data-fancybox="gallery" href={book.detalle}>More Info...</button>													
+														</div>
+													</div>
+												</div>
+											</div>
+										)
+										})		
+										}						
+									</div>                  
+								</div>
+							</main>
+							<footer class="fixed-bottom footer-style"> 
+	    						<p>Bookstore 2020 - Barcelona</p>
+	    					</footer>
+							</div>
+						)
+					}
+				}				
+
+				ReactDOM.render(<App />, document.getElementById("app"));
+
+			</script>	    		    
+
+  	</body>
+</html>
